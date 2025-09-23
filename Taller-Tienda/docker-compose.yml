@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: MiClaveSegura123!
+      MYSQL_DATABASE: tallerAR
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: MiClaveSegura123!
+      SPRING_PROFILES_ACTIVE: heavy
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_OPEN_IN_VIEW: "false"
+      HEAVY_STARTUP_WAIT-MS: "20000"
+      HEAVY_QPS_WRITES: "50"
+      HEAVY_QPS_READS: "120"
+      HEAVY_QPS_RESERVATIONS: "40"
+      HEAVY_MAX_CONCURRENCY: "32"
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+  light:
+    image: node:20
+    working_dir: /app
+    command: bash -lc "npm ci || npm i && CHOKIDAR_USEPOLLING=1 npm run dev -- --host"
+    environment:
+      VITE_API: http://localhost:8080
+      CHOKIDAR_USEPOLLING: "1"
+    volumes:
+      - ./tienda-spa:/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - app
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  mysql_data:
