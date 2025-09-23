@@ -21,7 +21,7 @@ Este es un proyecto que implementa una tienda en línea utilizando Spring Boot p
 
 ### 1. Clonar el Repositorio
 
-git clone https://github.com/tu_usuario/taller-tienda.git
+git clone https://github.com/juanDiesmers/TallerArqui.git
 cd taller-tienda
 
 ### 2. Levantar los Servicios con Docker Compose
@@ -208,13 +208,6 @@ Para entornos de producción, considera:
 4. Configurar backups automáticos de la base de datos
 5. Implementar monitoreo y logs centralizados
 
-## Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (git checkout -b feature/AmazingFeature)
-3. Commit tus cambios (git commit -m 'Add some AmazingFeature')
-4. Push a la rama (git push origin feature/AmazingFeature)
-5. Abre un Pull Request
 
 ## Licencia
 
