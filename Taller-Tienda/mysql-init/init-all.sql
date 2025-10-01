@@ -1,0 +1,96 @@
+-- 0) Crear bases (schemas)
+CREATE DATABASE IF NOT EXISTS inventario CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS facturacion CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS pagos       CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
+-- 1) INVENTARIO
+USE inventario;
+
+CREATE TABLE IF NOT EXISTS producto (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL,
+  descripcion TEXT NULL,
+  precio DECIMAL(12,2) NOT NULL,
+  stock INT NOT NULL DEFAULT 0,
+  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS almacen (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL,
+  ubicacion VARCHAR(200) NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS movimiento_inventario (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  producto_id BIGINT NOT NULL,
+  almacen_id BIGINT NULL,
+  tipo ENUM('ENTRADA','SALIDA','AJUSTE') NOT NULL,
+  cantidad INT NOT NULL,
+  referencia VARCHAR(64) NULL,
+  notas VARCHAR(255) NULL,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_mov_prod FOREIGN KEY (producto_id) REFERENCES inventario.producto(id),
+  CONSTRAINT fk_mov_alm  FOREIGN KEY (almacen_id)  REFERENCES inventario.almacen(id)
+) ENGINE=InnoDB;
+
+-- 2) FACTURACION
+USE facturacion;
+
+CREATE TABLE IF NOT EXISTS cliente (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  nombre VARCHAR(140) NULL,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS factura (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  numero VARCHAR(20) NOT NULL UNIQUE,
+  cliente_id BIGINT NOT NULL,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  total_centavos BIGINT NOT NULL,
+  estado ENUM('BORRADOR','EMITIDA','PAGADA','ANULADA') NOT NULL DEFAULT 'EMITIDA',
+  CONSTRAINT fk_fact_cliente FOREIGN KEY (cliente_id) REFERENCES facturacion.cliente(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS factura_item (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  factura_id BIGINT NOT NULL,
+  producto_id BIGINT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario_centavos BIGINT NOT NULL,
+  CONSTRAINT fk_item_fact FOREIGN KEY (factura_id) REFERENCES facturacion.factura(id) ON DELETE CASCADE,
+  CONSTRAINT fk_item_prod FOREIGN KEY (producto_id) REFERENCES inventario.producto(id)
+) ENGINE=InnoDB;
+
+-- 3) PAGOS
+USE pagos;
+
+CREATE TABLE IF NOT EXISTS metodo_pago (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  codigo VARCHAR(30) NOT NULL UNIQUE,
+  descripcion VARCHAR(140) NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pago (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  factura_id BIGINT NOT NULL,
+  metodo_id BIGINT NOT NULL,
+  monto_centavos BIGINT NOT NULL,
+  moneda CHAR(3) NOT NULL DEFAULT 'COP',
+  estado ENUM('PENDIENTE','APLICADO','FALLIDO','REEMBOLSADO') NOT NULL DEFAULT 'APLICADO',
+  referencia_externa VARCHAR(80) NULL,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pago_fact FOREIGN KEY (factura_id) REFERENCES facturacion.factura(id),
+  CONSTRAINT fk_pago_met  FOREIGN KEY (metodo_id)  REFERENCES pagos.metodo_pago(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS reembolso (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  pago_id BIGINT NOT NULL,
+  monto_centavos BIGINT NOT NULL,
+  motivo VARCHAR(180) NULL,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_reemb_pago FOREIGN KEY (pago_id) REFERENCES pagos.pago(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
