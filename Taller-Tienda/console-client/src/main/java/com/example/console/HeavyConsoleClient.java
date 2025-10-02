@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 public class HeavyConsoleClient {
 
   private static final String REST_BASE = "http://localhost:8080/api";
-  private static final String SOAP_URL = "http://localhost:8080/ws";
+  private static final String SOAP_URL = "http://localhost:8081/ws";
 
   private final RestClient restClient;
   private final SoapClient soapClient;

@@ -10,13 +10,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Cliente RPC usando protocolo JSON-RPC 2.0
- *
- * Para usar este cliente, necesitarías agregar un endpoint RPC en tu backend.
- * Aquí muestro cómo sería el cliente. Si prefieres gRPC, puedo proporcionarte
- * esa implementación también.
- */
+
 public class RpcClient {
 
   private final String baseUrl;
