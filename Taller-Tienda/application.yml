@@ -2,10 +2,34 @@ spring:
   application:
     name: Taller-Tienda
 
+  profiles:
+    active: default
+
+  jta:
+    enabled: true
+    atomikos:
+      properties:
+        max-timeout: 300000
+        default-jta-timeout: 300000
+
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:MiClaveSegura123!}
+    inventario:
+      url: jdbc:mysql://localhost:3307/inventario?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      username: root
+      password: MiClaveSegura123!
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+    facturacion:
+      url: jdbc:mysql://localhost:3307/facturacion?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      username: root
+      password: MiClaveSegura123!
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+    pagos:
+      url: jdbc:mysql://localhost:3307/pagos?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      username: root
+      password: MiClaveSegura123!
+      driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -14,6 +38,17 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+
+management: 
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    mappings:
+      enabled: true
 
 server:
   port: ${APP_PORT:8080}

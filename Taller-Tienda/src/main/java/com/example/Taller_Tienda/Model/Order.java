@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+
 @Entity @Table(name="orders")
 public class Order {
   @Id @GeneratedValue(strategy=GenerationType.IDENTITY)

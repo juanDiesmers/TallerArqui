@@ -1,19 +1,5 @@
-package com.example.Taller_Tienda.Service;
+/* package com.example.Taller_Tienda.Service;
 
-import com.example.Taller_Tienda.Model.Order;
-import com.example.Taller_Tienda.Model.Product;
-import com.example.Taller_Tienda.Model.User;
-import com.example.Taller_Tienda.Repository.OrderRepository;
-import com.example.Taller_Tienda.Repository.ProductRepository;
-import com.example.Taller_Tienda.Repository.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Connection;
@@ -22,10 +8,26 @@ import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
-@Configuration
-@Profile("heavy")
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.Taller_Tienda.Model.Order;
+import com.example.Taller_Tienda.Model.Product;
+import com.example.Taller_Tienda.Model.User;
+import com.example.Taller_Tienda.Repository.OrderRepository;
+import com.example.Taller_Tienda.Repository.ProductRepository;
+import com.example.Taller_Tienda.Repository.UserRepository;
+
+//@Configuration
+//@Profile("heavy")
 public class HeavyClientRunner implements ApplicationRunner {
 
   private final UserRepository userRepo;
@@ -57,7 +59,6 @@ public class HeavyClientRunner implements ApplicationRunner {
   private boolean restockCapEnabled;    // true para usar un tope máximo
   @Value("${heavy.restock.cap:200}")
   private int restockCap;               // tope máximo por producto
-
   @Value("${heavy.max.concurrency:16}")
   private int maxConcurrency;
 
@@ -180,7 +181,6 @@ public class HeavyClientRunner implements ApplicationRunner {
       try { productRepo.flush(); } catch (Exception ignored) {}
       System.out.println("[heavy] Productos sembrados. Total ahora: " + productRepo.count());
     } catch (Exception e) {
-      e.printStackTrace();
       System.out.println("[heavy] No se pudieron sembrar productos: " + e.getMessage());
     }
   }
@@ -257,3 +257,4 @@ public class HeavyClientRunner implements ApplicationRunner {
     productService.findRandom().ifPresent(p -> productService.reserveStock(p.getId(), 1));
   }
 }
+ */

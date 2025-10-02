@@ -74,27 +74,36 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.34</version>
       <scope>provided</scope>
     </dependency>
 
-    <!-- Necesario para DefaultWsdl11Definition (WSDL 1.1) -->
+    <!-- Necesario para Defa  ultWsdl11Definition (WSDL 1.1) -->
     <dependency>
       <groupId>wsdl4j</groupId>
       <artifactId>wsdl4j</artifactId>
-      <version>1.6.3</version>
     </dependency>
 
     <dependency>
-    <groupId>com.atomikos</groupId>
-    <artifactId>transactions-jta</artifactId>
-    <version>5.0.9</version>
-</dependency>
-<dependency>
-    <groupId>com.atomikos</groupId>
-    <artifactId>transactions-jdbc</artifactId>
-    <version>5.0.9</version>
-</dependency>
+        <groupId>jakarta.transaction</groupId>
+        <artifactId>jakarta.transaction-api</artifactId>
+    </dependency>
+
+    <!-- Atomikos JTA dependencies -->
+    <dependency>
+        <groupId>com.atomikos</groupId>
+        <artifactId>transactions-jta</artifactId>
+        <version>6.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.atomikos</groupId>
+        <artifactId>transactions-jdbc</artifactId>
+        <version>6.0.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
 
   </dependencies>
 
@@ -121,7 +130,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>3.5.5</version>
         <configuration>
           <mainClass>com.example.Taller_Tienda.TallerTiendaApplication</mainClass>
         </configuration>
@@ -180,7 +188,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.5.0</version>
         <executions>
           <execution>
             <id>add-jaxb-sources</id>
