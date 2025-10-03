@@ -1,7 +1,30 @@
-FROM eclipse-temurin:17-jre
+# -------- Stage 1: build (JDK 21 + Maven) --------
+FROM maven:3.9.8-eclipse-temurin-21 AS builder
 WORKDIR /app
-RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+
+# Copiamos solo lo necesario y conservamos caché de dependencias
+COPY pom.xml .
+RUN mvn -q -e -DskipTests dependency:go-offline
+
+# Ahora el código fuente
+COPY src ./src
+
+# Compilamos el JAR (sin tests en esta imagen; en CI puedes correrlos aparte)
+RUN mvn -q -e -DskipTests clean package
+
+# -------- Stage 2: runtime (JRE 21) --------
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+# Copiamos el artefacto empaquetado
+COPY --from=builder /app/target/*.jar app.jar
+
+# Puerto HTTP de tu Spring Boot
 EXPOSE 8080
-CMD sh -c 'until nc -z -v -w30 mysql 3306; do echo "Waiting for MySQL..."; sleep 3; done; java -jar app.jar'
+
+# Sugerido: healthcheck simple (opcional si usarás uno en compose)
+HEALTHCHECK --interval=10s --timeout=3s --retries=10 \
+  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+
+# Usa ENTRYPOINT en forma exec (no shell) para señales correctas
+ENTRYPOINT ["java","-jar","app.jar"]

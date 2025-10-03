@@ -25,8 +25,7 @@ import org.xml.sax.InputSource;
 public class SoapClient {
 
   private static final String NAMESPACE = "http://example.com/taller/tienda";
-  private static final String SOAP_ENV =
-    "http://schemas.xmlsoap.org/soap/envelope/";
+  private static final String SOAP_ENV = "http://schemas.xmlsoap.org/soap/envelope/";
 
   private final String baseUrl;
   private final HttpClient client;

@@ -4,23 +4,30 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: MiClaveSegura123!
       MYSQL_DATABASE: tallerAR
+      # opcional/cómodo: charset y collation por defecto
+      # MYSQL_TCP_PORT: 3306   # si quisieras cambiar puerto interno
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql-init:/docker-entrypoint-initdb.d
     ports:
-      - "3306:3306"
+      - "3306:3306"   # en dev puede quedar; en prod evita exponerlo
     networks:
       - backend
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 3s
-      retries: 20
+      retries: 30
+      start_period: 10s
 
   app:
     build: .
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy   # espera a que MySQL esté "healthy"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
@@ -37,6 +44,13 @@ services:
       - "8080:8080"
     networks:
       - backend
+    # opcional: healthcheck de la app si tienes actuator
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
 
   light:
     image: node:20
@@ -50,7 +64,8 @@ services:
     ports:
       - "5173:5173"
     depends_on:
-      - app
+      app:
+        condition: service_started
     networks:
       - backend
 
