@@ -1,13 +1,12 @@
 services:
   mysql:
-    image: mysql:8
+    image: mysql:8.4
     environment:
       MYSQL_ROOT_PASSWORD: MiClaveSegura123!
       MYSQL_DATABASE: tallerAR
       # opcional/cómodo: charset y collation por defecto
       # MYSQL_TCP_PORT: 3306   # si quisieras cambiar puerto interno
     command: >
-      --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
     volumes:
       - mysql_data:/var/lib/mysql
