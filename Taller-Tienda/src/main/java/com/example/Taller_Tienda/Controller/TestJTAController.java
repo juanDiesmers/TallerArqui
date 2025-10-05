@@ -1,21 +1,22 @@
+
 package com.example.Taller_Tienda.Controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Taller_Tienda.Service.OrderService;  
+import com.example.Taller_Tienda.Service.TestJTATransactionService;
 
 @RestController
-public class TestController {
+public class TestJTAController {
 
-    private final OrderService orderService;
+    private final TestJTATransactionService orderService;
 
-    public TestController(OrderService orderService) {
+    public TestJTAController(TestJTATransactionService orderService) {
         this.orderService = orderService;
     }
 
     @GetMapping("/test/distributed")
-    public String testDistributedTx() {
+    public String testRollback() {
         try {
             orderService.processOrderRollback();
             return "Proceso completado exitosamente";
@@ -23,5 +24,6 @@ public class TestController {
             return "Rollback exitoso: " + e.getMessage();
         }
     }
+
 }
- 
+

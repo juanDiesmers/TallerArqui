@@ -5,7 +5,7 @@ import java.time.Instant;
 import org.springframework.stereotype.Service;
 
 import com.example.Taller_Tienda.Model.Bill;
-import com.example.Taller_Tienda.Repository.BillRepository;
+import com.example.Taller_Tienda.Repository.facturacion.BillRepository;
 
 @Service
 

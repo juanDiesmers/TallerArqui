@@ -2,25 +2,26 @@ package com.example.Taller_Tienda.Service;
 
 
 
+import com.example.Taller_Tienda.Model.Bill;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.Taller_Tienda.Model.Bill;
+//import com.example.Taller_Tienda.Model.Facturacion;
 import com.example.Taller_Tienda.Model.Payment;
 import com.example.Taller_Tienda.Model.Product;
-import com.example.Taller_Tienda.Repository.BillRepository;
-import com.example.Taller_Tienda.Repository.PaymentRepository;
-import com.example.Taller_Tienda.Repository.ProductRepository;
+import com.example.Taller_Tienda.Repository.facturacion.BillRepository;
+import com.example.Taller_Tienda.Repository.pagos.PaymentRepository;
+import com.example.Taller_Tienda.Repository.inventario.ProductRepository;
 
 
 @Service
-public class OrderService {
+public class TestJTATransactionService {
 
     private final ProductRepository productRepo;
     private final BillRepository billRepo;
     private final PaymentRepository paymentRepo;
 
-    public OrderService(ProductRepository productRepo,
+    public TestJTATransactionService(ProductRepository productRepo,
                         BillRepository billRepo,
                         PaymentRepository paymentRepo) {
         this.productRepo = productRepo;
@@ -37,7 +38,7 @@ public class OrderService {
 
         Bill b = new Bill();
         b.setId(1L);
-        b.setTotal(99999L);
+        b.setOrderId(213L);
         billRepo.save(b);
 
         Payment pay = new Payment();

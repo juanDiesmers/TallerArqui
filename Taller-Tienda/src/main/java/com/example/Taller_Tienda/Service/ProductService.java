@@ -1,7 +1,7 @@
 package com.example.Taller_Tienda.Service;
 
 import com.example.Taller_Tienda.Model.Product;
-import com.example.Taller_Tienda.Repository.ProductRepository;
+import com.example.Taller_Tienda.Repository.inventario.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

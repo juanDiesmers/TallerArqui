@@ -1,29 +1,20 @@
-
 package com.example.Taller_Tienda.Controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.Taller_Tienda.Service.OrderService;
+import com.example.Taller_Tienda.Model.Order;
+import com.example.Taller_Tienda.Repository.order.OrderRepository;
+import org.springframework.data.domain.*;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/users/{userId}/orders")
 public class OrderController {
+  private final OrderRepository repo;
+  public OrderController(OrderRepository repo) { this.repo = repo; }
 
-    private final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
-    @GetMapping("/test/distributed")
-    public String testRollback() {
-        try {
-            orderService.processOrderRollback();
-            return "Proceso completado exitosamente";
-        } catch (Exception e) {
-            return "Rollback exitoso: " + e.getMessage();
-        }
-    }
-
+  @GetMapping
+  public Page<Order> recent(@PathVariable Long userId,
+                            @RequestParam(defaultValue="0") int page,
+                            @RequestParam(defaultValue="50") int size) {
+    return repo.findRecentByUser(userId, PageRequest.of(page, size));
+  }
 }
-

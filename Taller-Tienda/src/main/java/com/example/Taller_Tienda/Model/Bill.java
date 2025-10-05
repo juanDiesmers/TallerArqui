@@ -18,8 +18,6 @@ public class Bill {
 
     private Long orderId;
 
-    private Long total;
-
     @Column(name = "issued_at", nullable = false, updatable = false)
     private Instant issuedAt = Instant.now();
 
@@ -32,7 +30,4 @@ public class Bill {
 
     public Instant getIssuedAt() { return issuedAt; }
     public void setIssuedAt(Instant issuedAt) { this.issuedAt = issuedAt; }
-
-    public Long getTotal() { return total; }
-    public void setTotal(Long total) { this.total = total; }
 }

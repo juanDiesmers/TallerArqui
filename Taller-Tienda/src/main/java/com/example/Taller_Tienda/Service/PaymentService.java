@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import com.example.Taller_Tienda.Model.Payment;
-import com.example.Taller_Tienda.Repository.PaymentRepository;
+import com.example.Taller_Tienda.Repository.pagos.PaymentRepository;
 
 @Service
 public class PaymentService {

@@ -7,17 +7,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
+// ✅ Importa las clases JAXB generadas (según tu grep)
 import com.example.taller.tienda.xsd.GetProductoRequest;
 import com.example.taller.tienda.xsd.GetProductoResponse;
 
 @EnableWs
 @Configuration
-public class WebServiceConfig {
+public class WebServiceConfig extends WsConfigurerAdapter {
 
     /** Debe coincidir con el targetNamespace del XSD */
     public static final String NS = "http://example.com/taller/tienda";

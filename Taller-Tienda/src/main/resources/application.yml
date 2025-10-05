@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: Taller-Tienda
+
+  profiles:
+    active: default
+
+  jta:
+    enabled: true
+    atomikos:
+      properties:
+        max-timeout: 300000
+        default-jta-timeout: 300000
+
+  datasource:
+    main:
+      url: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      username: root
+      password: MiClaveSegura123!
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+
+server:
+  port: ${APP_PORT:8080}

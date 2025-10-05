@@ -12,7 +12,7 @@ services:
     networks:
       - backend
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p MiClaveSegura123! --silent"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -22,7 +22,7 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: MiClaveSegura123!
       #SPRING_PROFILES_ACTIVE: heavy

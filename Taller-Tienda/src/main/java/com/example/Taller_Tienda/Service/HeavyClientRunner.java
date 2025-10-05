@@ -1,5 +1,24 @@
-/* package com.example.Taller_Tienda.Service;
+package com.example.Taller_Tienda.Service;
 
+import com.example.Taller_Tienda.Model.Order;
+import com.example.Taller_Tienda.Model.Product;
+import com.example.Taller_Tienda.Model.User;
+import com.example.Taller_Tienda.Repository.order.OrderRepository;
+import com.example.Taller_Tienda.Repository.inventario.ProductRepository;
+import com.example.Taller_Tienda.Repository.user.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Connection;
@@ -8,33 +27,26 @@ import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.example.Taller_Tienda.Model.Order;
-import com.example.Taller_Tienda.Model.Product;
-import com.example.Taller_Tienda.Model.User;
-import com.example.Taller_Tienda.Repository.OrderRepository;
-import com.example.Taller_Tienda.Repository.ProductRepository;
-import com.example.Taller_Tienda.Repository.UserRepository;
-
-//@Configuration
-//@Profile("heavy")
+@Configuration
+@Profile("heavy")
+@EnableJpaRepositories(
+        basePackages = "com.example.Taller_Tienda.Repository.order",
+        entityManagerFactoryRef = "orderEntityManagerFactory",
+        transactionManagerRef = "transactionManager"
+)
 public class HeavyClientRunner implements ApplicationRunner {
 
   private final UserRepository userRepo;
   private final OrderRepository orderRepo;
   private final ProductService productService;
   private final ProductRepository productRepo;
-  private final DataSource dataSource;
+
+  
+  @Autowired
+  @Qualifier("orderDataSource")
+  private  DataSource dataSource;
 
   @Value("${heavy.startup.wait-ms:15000}")
   private long waitMs;
@@ -59,19 +71,19 @@ public class HeavyClientRunner implements ApplicationRunner {
   private boolean restockCapEnabled;    // true para usar un tope máximo
   @Value("${heavy.restock.cap:200}")
   private int restockCap;               // tope máximo por producto
+
   @Value("${heavy.max.concurrency:16}")
   private int maxConcurrency;
 
   public HeavyClientRunner(UserRepository userRepo,
                            OrderRepository orderRepo,
                            ProductService productService,
-                           ProductRepository productRepo,
-                           DataSource dataSource) {
+                           ProductRepository productRepo
+                           ) {
     this.userRepo = userRepo;
     this.orderRepo = orderRepo;
     this.productService = productService;
     this.productRepo = productRepo;
-    this.dataSource = dataSource;
   }
 
   @Override
@@ -181,6 +193,7 @@ public class HeavyClientRunner implements ApplicationRunner {
       try { productRepo.flush(); } catch (Exception ignored) {}
       System.out.println("[heavy] Productos sembrados. Total ahora: " + productRepo.count());
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("[heavy] No se pudieron sembrar productos: " + e.getMessage());
     }
   }
@@ -257,4 +270,3 @@ public class HeavyClientRunner implements ApplicationRunner {
     productService.findRandom().ifPresent(p -> productService.reserveStock(p.getId(), 1));
   }
 }
- */

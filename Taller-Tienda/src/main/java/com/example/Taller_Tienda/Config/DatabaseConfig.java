@@ -17,18 +17,36 @@ public class DatabaseConfig {
     @Bean(name = "inventarioDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.inventario")
     public DataSource inventarioDataSource() {
-        return new AtomikosDataSourceBean();
+        AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+        xaDataSource.setUniqueResourceName("myDataSourceInventario");
+        xaDataSource.setXaDataSourceClassName("com.mysql.cj.jdbc.MysqlXADataSource");
+        return xaDataSource;
+    }
+
+    @Bean(name = "orderDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.order")
+    public DataSource orderDataSource() {
+        AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+        xaDataSource.setUniqueResourceName("myDataSourceOrder");
+        xaDataSource.setXaDataSourceClassName("com.mysql.cj.jdbc.MysqlXADataSource");
+        return xaDataSource;
     }
     
     @Bean(name = "facturacionDataSource") 
     @ConfigurationProperties(prefix = "spring.datasource.facturacion")
     public DataSource facturacionDataSource() {
-        return new AtomikosDataSourceBean();
+        AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+        xaDataSource.setUniqueResourceName("myDataSourceFacturacion");
+        xaDataSource.setXaDataSourceClassName("com.mysql.cj.jdbc.MysqlXADataSource");
+        return xaDataSource;
     }
     
     @Bean(name = "pagosDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.pagos")
     public DataSource pagosDataSource() {
-        return new AtomikosDataSourceBean();
+        AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+        xaDataSource.setUniqueResourceName("myDataSourcePagos");
+        xaDataSource.setXaDataSourceClassName("com.mysql.cj.jdbc.MysqlXADataSource");
+        return xaDataSource;
     }
 }

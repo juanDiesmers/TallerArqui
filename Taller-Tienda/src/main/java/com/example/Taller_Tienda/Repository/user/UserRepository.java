@@ -1,4 +1,4 @@
-package com.example.Taller_Tienda.Repository;
+package com.example.Taller_Tienda.Repository.user;
 import com.example.Taller_Tienda.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

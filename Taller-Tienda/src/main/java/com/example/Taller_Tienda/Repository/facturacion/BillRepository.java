@@ -1,4 +1,4 @@
-package com.example.Taller_Tienda.Repository;
+package com.example.Taller_Tienda.Repository.facturacion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
