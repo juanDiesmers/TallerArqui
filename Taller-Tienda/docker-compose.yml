@@ -25,7 +25,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: MiClaveSegura123!
-      #SPRING_PROFILES_ACTIVE: heavy
+      SPRING_PROFILES_ACTIVE: heavy
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_OPEN_IN_VIEW: "false"
       HEAVY_STARTUP_WAIT-MS: "20000"

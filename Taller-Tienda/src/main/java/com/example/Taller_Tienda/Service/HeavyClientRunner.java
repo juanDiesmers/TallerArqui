@@ -21,7 +21,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Taller_Tienda.Model.Order;
@@ -33,11 +32,6 @@ import com.example.Taller_Tienda.Repository.user.UserRepository;
 
 @Configuration
 @Profile("heavy")
-@EnableJpaRepositories(
-        basePackages = "com.example.Taller_Tienda.Repository.order",
-        entityManagerFactoryRef = "orderEntityManagerFactory",
-        transactionManagerRef = "transactionManager"
-)
 public class HeavyClientRunner implements ApplicationRunner {
 
   private final UserRepository userRepo;
