@@ -1,11 +1,18 @@
 package com.example.Taller_Tienda.Service;
 
-import com.example.Taller_Tienda.Model.Order;
-import com.example.Taller_Tienda.Model.Product;
-import com.example.Taller_Tienda.Model.User;
-import com.example.Taller_Tienda.Repository.order.OrderRepository;
-import com.example.Taller_Tienda.Repository.inventario.ProductRepository;
-import com.example.Taller_Tienda.Repository.user.UserRepository;
+import java.math.BigDecimal;
+import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,19 +22,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.*;
+import com.example.Taller_Tienda.Model.Order;
+import com.example.Taller_Tienda.Model.Product;
+import com.example.Taller_Tienda.Model.User;
+import com.example.Taller_Tienda.Repository.inventario.ProductRepository;
+import com.example.Taller_Tienda.Repository.order.OrderRepository;
+import com.example.Taller_Tienda.Repository.user.UserRepository;
 
 @Configuration
 @Profile("heavy")
@@ -193,7 +195,7 @@ public class HeavyClientRunner implements ApplicationRunner {
       try { productRepo.flush(); } catch (Exception ignored) {}
       System.out.println("[heavy] Productos sembrados. Total ahora: " + productRepo.count());
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       System.out.println("[heavy] No se pudieron sembrar productos: " + e.getMessage());
     }
   }

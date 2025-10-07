@@ -9,15 +9,60 @@ spring:
     enabled: true
     atomikos:
       properties:
-        max-timeout: 300000
-        default-jta-timeout: 300000
+        max-timeout: 600000
+        default-jta-timeout: 600000
+        service: com.atomikos.icatch.standalone.UserTransactionServiceFactory
+        log-base-dir: ./atomikos-logs
 
+  # ===== CONFIGURACIÓN DE DATASOURCES PARA JTA/ATOMIKOS =====
   datasource:
-    main:
-      url: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      username: root
-      password: MiClaveSegura123!
-      driver-class-name: com.mysql.cj.jdbc.Driver
+     # DataSource para Main
+    order:
+      xa-properties:
+        url: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        user: root
+        password: MiClaveSegura123!
+        pinGlobalTxToPhysicalConnection: true
+      min-pool-size: 5
+      max-pool-size: 20
+      borrow-connection-timeout: 30
+      test-query: SELECT 1
+
+    # DataSource para Inventario
+    inventario:
+      xa-properties:
+        url: jdbc:mysql://mysql:3306/inventario?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        user: root
+        password: MiClaveSegura123!
+        pinGlobalTxToPhysicalConnection: true
+      min-pool-size: 5
+      max-pool-size: 20
+      borrow-connection-timeout: 30
+      test-query: SELECT 1
+
+    # DataSource para Facturación
+    facturacion:
+      xa-properties:
+        url: jdbc:mysql://mysql:3306/facturacion?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        user: root
+        password: MiClaveSegura123!
+        pinGlobalTxToPhysicalConnection: true
+      min-pool-size: 5
+      max-pool-size: 20
+      borrow-connection-timeout: 30
+      test-query: SELECT 1
+
+    # DataSource para Pagos
+    pagos:
+      xa-properties:
+        url: jdbc:mysql://mysql:3306/pagos?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        user: root
+        password: MiClaveSegura123!
+        pinGlobalTxToPhysicalConnection: true
+      min-pool-size: 5
+      max-pool-size: 20
+      borrow-connection-timeout: 30
+      test-query: SELECT 1
 
   jpa:
     hibernate:
@@ -26,6 +71,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+
+  # Timeout de transacciones Spring
+  transaction:
+    default-timeout: 600
 
 server:
   port: ${APP_PORT:8080}

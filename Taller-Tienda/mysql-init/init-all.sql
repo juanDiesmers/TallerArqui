@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS producto (
   descripcion TEXT NULL,
   precio DECIMAL(12,2) NOT NULL,
   stock INT NOT NULL DEFAULT 0,
-  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_producto_id (id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS almacen (
@@ -51,7 +52,8 @@ CREATE TABLE IF NOT EXISTS factura (
   fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   total_centavos BIGINT NOT NULL,
   estado ENUM('BORRADOR','EMITIDA','PAGADA','ANULADA') NOT NULL DEFAULT 'EMITIDA',
-  CONSTRAINT fk_fact_cliente FOREIGN KEY (cliente_id) REFERENCES facturacion.cliente(id)
+  CONSTRAINT fk_fact_cliente FOREIGN KEY (cliente_id) REFERENCES facturacion.cliente(id),
+  INDEX idx_factura_id (id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS factura_item (
@@ -61,7 +63,7 @@ CREATE TABLE IF NOT EXISTS factura_item (
   cantidad INT NOT NULL,
   precio_unitario_centavos BIGINT NOT NULL,
   CONSTRAINT fk_item_fact FOREIGN KEY (factura_id) REFERENCES facturacion.factura(id) ON DELETE CASCADE,
-  CONSTRAINT fk_item_prod FOREIGN KEY (producto_id) REFERENCES inventario.producto(id)
+  INDEX idx_producto_id (producto_id)
 ) ENGINE=InnoDB;
 
 -- 3) PAGOS
@@ -76,14 +78,14 @@ CREATE TABLE IF NOT EXISTS metodo_pago (
 CREATE TABLE IF NOT EXISTS pago (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   factura_id BIGINT NOT NULL,
-  metodo_id BIGINT NOT NULL,
+  -- metodo_id BIGINT NOT NULL,
   monto_centavos BIGINT NOT NULL,
   moneda CHAR(3) NOT NULL DEFAULT 'COP',
   estado ENUM('PENDIENTE','APLICADO','FALLIDO','REEMBOLSADO') NOT NULL DEFAULT 'APLICADO',
   referencia_externa VARCHAR(80) NULL,
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_pago_fact FOREIGN KEY (factura_id) REFERENCES facturacion.factura(id),
-  CONSTRAINT fk_pago_met  FOREIGN KEY (metodo_id)  REFERENCES pagos.metodo_pago(id)
+  INDEX idx_factura_id (factura_id)
+  -- CONSTRAINT fk_pago_met  FOREIGN KEY (metodo_id)  REFERENCES pagos.metodo_pago(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS reembolso (
@@ -94,3 +96,7 @@ CREATE TABLE IF NOT EXISTS reembolso (
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_reemb_pago FOREIGN KEY (pago_id) REFERENCES pagos.pago(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+
+INSERT INTO `inventario`.`producto` (`id`, `nombre`, `descripcion`, `precio`, `stock`) VALUES ('1', 'fosforos', 'fosforos', '10000', '100');
+INSERT INTO `facturacion`.`cliente` (`id`, `email`, `nombre`) VALUES ('1', 'aaa', 'Pedro');

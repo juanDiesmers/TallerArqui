@@ -59,6 +59,7 @@
       <scope>runtime</scope>
     </dependency>
 
+
     <!-- JAXB para SOAP / XML binding -->
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
@@ -73,7 +74,6 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.34</version>
       <scope>provided</scope>
     </dependency>
 
@@ -81,7 +81,6 @@
     <dependency>
       <groupId>wsdl4j</groupId>
       <artifactId>wsdl4j</artifactId>
-      <version>1.6.3</version>
     </dependency>
 
     <!-- Transacciones (Atomikos) si lo necesitas -->
@@ -124,7 +123,6 @@
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>2.1.1</version>
     </dependency>
 
     <!-- javax.annotation (solo para compilar el código generado por gRPC) -->
@@ -165,7 +163,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>3.5.5</version>
         <configuration>
           <mainClass>com.example.Taller_Tienda.TallerTiendaApplication</mainClass>
         </configuration>
@@ -236,7 +233,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.5.0</version>
         <executions>
           <execution>
             <id>add-jaxb-sources</id>
