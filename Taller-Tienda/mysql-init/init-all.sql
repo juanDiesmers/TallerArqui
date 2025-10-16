@@ -3,6 +3,8 @@ CREATE DATABASE IF NOT EXISTS inventario CHARACTER SET utf8mb4 COLLATE utf8mb4_0
 CREATE DATABASE IF NOT EXISTS facturacion CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 CREATE DATABASE IF NOT EXISTS pagos       CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
+
+
 -- 1) INVENTARIO
 USE inventario;
 
@@ -96,6 +98,8 @@ CREATE TABLE IF NOT EXISTS reembolso (
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_reemb_pago FOREIGN KEY (pago_id) REFERENCES pagos.pago(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+
 
 
 INSERT INTO `inventario`.`producto` (`id`, `nombre`, `descripcion`, `precio`, `stock`) VALUES ('1', 'fosforos', 'fosforos', '10000', '100');
