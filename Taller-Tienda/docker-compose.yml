@@ -17,7 +17,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - spring-net
+      - backend
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -25,6 +25,8 @@ services:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - backend
 
   mysql:
     image: mysql:8
@@ -49,17 +51,11 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tallerAR?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: MiClaveSegura123!
-      #SPRING_PROFILES_ACTIVE: heavy
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_OPEN_IN_VIEW: "false"
-      HEAVY_STARTUP_WAIT-MS: "20000"
-      HEAVY_QPS_WRITES: "50"
-      HEAVY_QPS_READS: "120"
-      HEAVY_QPS_RESERVATIONS: "40"
-      HEAVY_MAX_CONCURRENCY: "32"
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
       MANAGEMENT_ENDPOINT_HEALTH_SHOW-DETAILS: always
       MANAGEMENT_ENDPOINT_MAPPINGS_ENABLED: true
