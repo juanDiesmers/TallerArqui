@@ -1,0 +1,43 @@
+# ==== LIMPIEZA (ignora errores si no existen) ====
+try
+  module remove --name=com.mysql
+catch
+end-try
+try
+  /subsystem=datasources/jdbc-driver=mysql:remove()
+catch
+end-try
+try
+  data-source remove --name=SalesDS
+catch
+end-try
+try
+  /subsystem=mail/mail-session="java:/Mail":remove()
+catch
+end-try
+try
+  /socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp:remove()
+catch
+end-try
+try
+  /subsystem=messaging-activemq/server=default/jms-queue=orderEvents:remove()
+catch
+end-try
+
+# ==== DRIVER MYSQL ====
+module add --name=com.mysql --resources=/tmp/mysql-connector-j-8.4.0.jar --dependencies=javax.api,javax.transaction.api
+/subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql,driver-module-name=com.mysql,driver-class-name=com.mysql.cj.jdbc.Driver)
+
+# ==== DATASOURCE (servicio compose "mysql") ====
+data-source add --name=SalesDS --jndi-name=java:/jdbc/SalesDS --driver-name=mysql \
+ --connection-url=jdbc:mysql://mysql:3306/sales?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
+ --user-name=sales --password=sales --min-pool-size=5 --max-pool-size=20 --enabled=true
+
+# ==== MAIL (Mailhog en la misma red de compose) ====
+/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp:add(host=mailhog, port=1025)
+/subsystem=mail/mail-session="java:/Mail":add(jndi-name=java:/Mail, debug=true)
+/subsystem=mail/mail-session="java:/Mail"/server=smtp:add(outbound-socket-binding-ref=mail-smtp)
+/subsystem=mail/mail-session="java:/Mail":write-attribute(name=from, value="noreply@example.com")
+
+# ==== JMS QUEUE ====
+/subsystem=messaging-activemq/server=default/jms-queue=orderEvents:add(entries=[java:/jms/queue/orderEvents,java:jboss/exported/jms/queue/orderEvents])
