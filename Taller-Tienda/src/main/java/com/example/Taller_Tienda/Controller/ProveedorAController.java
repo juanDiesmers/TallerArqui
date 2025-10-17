@@ -6,25 +6,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Taller_Tienda.ModelProveedorA.Factura;
-import com.example.Taller_Tienda.Service.ProveedorAService;
+import com.example.Taller_Tienda.Service.Notificaciones;
+
 
 @RestController
 @RequestMapping("/proveedorA")
 public class ProveedorAController {
 
     @Autowired
-    private ProveedorAService proveedorAService;
+    private Notificaciones notificaciones;
 
+    
     @PostMapping("/notificar")
     public String notificar(@RequestBody String mensaje) {
-        proveedorAService.enviarNotificacion(mensaje);
+        notificaciones.enviarNotificacion(mensaje);
         return "Notificación enviada al proveedor A";
     }
-
-    @PostMapping("/factura")
-    public String enviarFactura(@RequestBody Factura factura) {
-        proveedorAService.enviarFactura(factura);
-        return "Factura enviada al proveedor A por Kafka";
+/*
+    @PostMapping("/enviar")
+    public String enviarMensaje(@RequestParam String mensaje) {
+        producerService.enviarMensaje(mensaje);
+        return "Mensaje enviado a Kafka: " + mensaje;
     }
+
+    */
+
 }
