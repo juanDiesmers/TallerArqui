@@ -4,7 +4,7 @@ Este es un proyecto que implementa una tienda en línea utilizando Spring Boot p
 
 ## Características
 
-- Backend: Spring Boot con API REST
+- Backend: Spring Boot con API REST, ademas se realizaron pruebas de transacciones con JTA y Notificaciones manejando Kafka
 - Frontend: React + Vite
 - Base de Datos: MySQL 8
 - Contenedorización: Docker y Docker Compose
@@ -27,7 +27,7 @@ cd taller-tienda
 ### 2. Levantar los Servicios con Docker Compose
 
 # Construir y levantar todos los servicios en segundo plano
-docker-compose up -d --build
+docker-compose up -d --build o docker-compose up --build (si se requieren ver los logs dentro de la terminal)
 
 ### 3. Verificar el Estado de los Contenedores
 
@@ -48,6 +48,14 @@ c3b82a1d4f5a   taller-tienda-light-1        "docker-entrypoint.s…"   3 seconds
 - Base de Datos (MySQL): localhost:3306
 
 ## Gestión de Servicios
+
+### Probar las trasancciones con JTA
+
+- acceder a http://localhost:8080/
+
+### Probar la notificaciones con Kafka que se consume como test 
+
+### 
 
 ### Ver Logs en Tiempo Real
 

@@ -1,4 +1,4 @@
-package com.example.Taller_Tienda.Service;
+/* package com.example.Taller_Tienda.Service;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -9,7 +9,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Notificaciones {
+public class KafkaPrueba {
 
     private static final String TOPIC = "proveedorA_notificaciones";
 
@@ -38,3 +38,4 @@ public class Notificaciones {
     }
 
 }
+ */

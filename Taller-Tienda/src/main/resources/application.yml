@@ -8,13 +8,16 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
     consumer:
-      group-id: grupo-proveedorA
-      auto-offset-reset: earliest
+      group-id: notificaciones-group
+      auto-offset-reset: latest
+      enable-auto-commit: true
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    topic:
+      notificaciones: notificaciones-topic
+      notificaciones-criticas: notificaciones-criticas-topic
 
   jta:
     enabled: true
