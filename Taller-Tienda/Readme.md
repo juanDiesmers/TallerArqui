@@ -22,7 +22,7 @@ Este es un proyecto que implementa una tienda en línea utilizando Spring Boot p
 ### 1. Clonar el Repositorio
 
 git clone https://github.com/juanDiesmers/TallerArqui.git
-cd taller-tienda
+cd Taller-Tienda
 
 ### 2. Levantar los Servicios con Docker Compose
 
@@ -34,28 +34,24 @@ docker-compose up -d --build o docker-compose up --build (si se requieren ver lo
 # Verificar que todos los contenedores estén corriendo
 docker ps
 
-Deberías ver una salida similar a:
-
-CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS          PORTS                               NAMES
-5f45bb84c0e4   taller-tienda-mysql-1        "docker-entrypoint.s…"   12 seconds ago   Up 10 seconds   0.0.0.0:3306->3306/tcp             taller-tienda-mysql-1
-a4c57b1b2b1e   taller-tienda-app-1          "/entrypoint.sh"         5 seconds ago    Up 3 seconds    0.0.0.0:8080->8080/tcp             taller-tienda-app-1
-c3b82a1d4f5a   taller-tienda-light-1        "docker-entrypoint.s…"   3 seconds ago    Up 2 seconds    0.0.0.0:5173->5173/tcp             taller-tienda-light-1
-
 ## Acceso a la Aplicación
 
 - Frontend (React + Vite): http://localhost:5173
-- Backend (Spring Boot API): http://localhost:8080
 - Base de Datos (MySQL): localhost:3306
 
 ## Gestión de Servicios
 
 ### Probar las trasancciones con JTA
 
-- acceder a http://localhost:8080/
+si se quiere probar el exito de una transaccion (todo el proceso se realiza correctamente) 
+- acceder a http://localhost:8080/api/bill?productoId=1&cantidad=2&clienteId=1&metodoPagoId=1&simulateFailure=false
 
-### Probar la notificaciones con Kafka que se consume como test 
+si se quiere probar el fracaso de una transaccion (se procede a dañar el ultimo paso, toda la transaccion se cancela y se hace un rollback, en base de datos se puede observar que la informacion que se alcanza a guardar antes de termianr la transaccion se elimina y no queda rastro de la misma, manteniendo los datos que ya se tenian)
+- acceder a http://localhost:8080/api/bill?productoId=1&cantidad=2&clienteId=1&metodoPagoId=1&simulateFailure=true
 
-### 
+### Probar la notificaciones con  kafka y MD que se consume como test 
+
+- acceder a http://localhost:8080/api/notificaciones/test
 
 ### Ver Logs en Tiempo Real
 
@@ -107,64 +103,6 @@ SHOW TABLES;
 -- Ver datos de productos (ejemplo)
 SELECT * FROM producto LIMIT 5;
 
-## Estructura del Proyecto
-
-taller-tienda/
-├── docker-compose.yml
-├── Dockerfile
-├── backend/
-│   ├── src/
-│   └── pom.xml
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-└── README.md
-
-## Archivo Docker Compose (docker-compose.yml)
-
-version: '3'
-
-services:
-  mysql:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: MiClaveSegura123!
-      MYSQL_DATABASE: tallerAR
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - backend
-
-  app:
-    image: taller-tienda-app
-    build:
-      context: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
-    networks:
-      - backend
-
-  light:
-    image: node:20
-    build:
-      context: ./frontend
-    ports:
-      - "5173:5173"
-    networks:
-      - backend
-
-volumes:
-  mysql_data:
-
-networks:
-  backend:
-    driver: bridge
-
 ## Solución de Problemas
 
 ### Puerto Ocupado
@@ -182,22 +120,12 @@ sudo service mysql stop  # En Linux
 docker network ls
 docker inspect taller-tienda_backend
 
-### Reconstruir Imágenes
+### Reconstruir Imágenes y limpiar docker
 
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
-
-### Limpiar Docker
-
-# Eliminar contenedores detenidos
-docker container prune
-
-# Eliminar imágenes no utilizadas
-docker image prune
-
-# Eliminar volúmenes no utilizados
-docker volume prune
+docker-compose down --rmi all
+docker-compose down -v
+docker-compose build app
+docker-compose up 
 
 ## Notas Importantes
 
@@ -215,12 +143,3 @@ Para entornos de producción, considera:
 3. Implementar un reverse proxy (Nginx)
 4. Configurar backups automáticos de la base de datos
 5. Implementar monitoreo y logs centralizados
-
-
-## Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo LICENSE para más detalles.
-
----
-
-¡Listo para usar! Ejecuta docker-compose up -d --build y tu aplicación estará corriendo en minutos.

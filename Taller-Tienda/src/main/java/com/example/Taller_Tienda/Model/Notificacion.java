@@ -16,8 +16,7 @@ public class Notificacion {
     private String mensaje;
     
     @JsonProperty("tipo")
-    private String tipo; // EMAIL, SMS, PUSH, etc.
-    
+    private String tipo; 
     @JsonProperty("fecha")
     private LocalDateTime fecha;
     

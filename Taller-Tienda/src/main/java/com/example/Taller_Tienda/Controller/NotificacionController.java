@@ -16,9 +16,6 @@ import com.example.Taller_Tienda.Model.Notificacion;
 import com.example.Taller_Tienda.Model.NotificacionRequest;
 import com.example.Taller_Tienda.producer.NotificacionProducer;
 
-/**
- * Controller para probar el envío de notificaciones a Kafka
- */
 @RestController
 @RequestMapping("/api/notificaciones")
 public class NotificacionController {
@@ -27,14 +24,13 @@ public class NotificacionController {
     private NotificacionProducer notificacionProducer;
     
     /**
-     * Endpoint para enviar una notificación de prueba
-     * 
-     * POST /api/notificaciones/enviar
-     * {
-     *   "usuarioId": "user123",
-     *   "mensaje": "Tu pedido ha sido enviado",
-     *   "tipo": "EMAIL"
-     * }
+      
+      POST /api/notificaciones/enviar
+      {
+        "usuarioId": "user123",
+        "mensaje": "Tu pedido ha sido enviado",
+        "tipo": "EMAIL"
+      }
      */
     @PostMapping("/enviar")
     public ResponseEntity<Map<String, String>> enviarNotificacion(
@@ -59,10 +55,10 @@ public class NotificacionController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * Endpoint de prueba rápida - envía una notificación EMAIL predefinida
-     * 
-     * GET /api/notificaciones/test
+    /*
+     envía una noti EMAIL 
+     
+     GET /api/notificaciones/test
      */
     @GetMapping("/test")
     public ResponseEntity<Map<String, String>> testNotificacion() {

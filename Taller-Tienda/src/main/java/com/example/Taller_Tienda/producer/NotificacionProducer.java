@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.Taller_Tienda.Model.Notificacion;
 
-/**
- * Producer para enviar notificaciones a Kafka
- */
+//Producer
 @Component
 public class NotificacionProducer {
     
