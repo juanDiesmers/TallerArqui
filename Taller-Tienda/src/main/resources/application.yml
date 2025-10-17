@@ -4,6 +4,20 @@ spring:
 
   profiles:
     active: default
+
+  wildfly:
+  jms:
+    host: wildfly
+    port: 5445
+    username: ""
+    password: ""
+    queue: jms.queue.orderEvents
+  spring:
+    kafka:
+      bootstrap-servers: kafka:9092
+      consumer:
+        group-id: tienda-bridge
+        auto-offset-reset: earliest
   
   kafka:
     bootstrap-servers: kafka:9092

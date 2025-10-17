@@ -10,7 +10,7 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 # Compilamos el JAR (sin tests en esta imagen; en CI puedes correrlos aparte)
-RUN mvn clean package -DskipTests
+RUN mvn -B -ntp clean package -Dmaven.test.skip=true
 
 # -------- Stage 2: runtime (JRE 21) --------
 FROM eclipse-temurin:21-jre

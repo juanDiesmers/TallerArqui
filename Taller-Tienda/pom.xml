@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -17,50 +16,61 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Taller-Tienda</name>
-  <description>Proyecto con Spring Boot + gRPC</description>
+  <description>Proyecto con Spring Boot + Kafka + JMS (WildFly)</description>
 
   <properties>
     <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Versiones para gRPC / Protobuf -->
+    <!-- gRPC / Protobuf -->
     <grpc.version>1.63.0</grpc.version>
     <protobuf.version>3.25.5</protobuf.version>
     <grpc.plugin.version>${grpc.version}</grpc.plugin.version>
+
+    <!-- Artemis: usar una sola versión coherente -->
+    <artemis.version>2.40.0</artemis.version>
   </properties>
 
   <dependencies>
-    <!-- Spring Boot básicos -->
+    <!-- SPRING CORE -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>  
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web-services</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
-    <!-- Conector MySQL -->
+    <!-- DATABASE -->
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
       <scope>runtime</scope>
     </dependency>
 
+    <!-- SOAP / Spring Web Services -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web-services</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-oxm</artifactId>
+    </dependency>
 
-    <!-- JAXB para SOAP / XML binding -->
+    <!-- JAXB (SOAP/XML en Java 11+) -->
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
@@ -70,39 +80,25 @@
       <artifactId>jaxb-runtime</artifactId>
     </dependency>
 
-    <!-- Lombok (si lo usas) -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- wsdl4j para generación de WSDL1.1 (SOAP) -->
+    <!-- WSDL 1.1 (si expones WSDLs) -->
     <dependency>
       <groupId>wsdl4j</groupId>
       <artifactId>wsdl4j</artifactId>
     </dependency>
 
-    <!-- Transacciones (Atomikos) si lo necesitas -->
-    <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>jta</artifactId>
-      <version>1.1</version>
-    </dependency>
+    <!-- Transacciones (opcional) -->
     <dependency>
       <groupId>com.atomikos</groupId>
       <artifactId>transactions-spring-boot3-starter</artifactId>
       <version>6.0.0</version>
     </dependency>
 
-    <!-- gRPC Spring Boot Starter (servidor embebido gRPC) -->
+    <!-- gRPC -->
     <dependency>
       <groupId>net.devh</groupId>
       <artifactId>grpc-server-spring-boot-starter</artifactId>
       <version>3.1.0.RELEASE</version>
     </dependency>
-
-    <!-- Librerías gRPC Java -->
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-protobuf</artifactId>
@@ -119,29 +115,45 @@
       <version>${grpc.version}</version>
     </dependency>
 
-    <!-- Dependencia adicional si tu plugin genera anotaciones javax / jakarta -->
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-    </dependency>
-
-    <!-- javax.annotation (solo para compilar el código generado por gRPC) -->
+    <!-- Necesario para javax.annotation.Generated que usa gRPC -->
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>javax.annotation-api</artifactId>
       <version>1.3.2</version>
     </dependency>
 
-    <!-- Dependencias de testing -->
+    <!-- Lombok (si lo usas) -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Kafka -->
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
+    </dependency>
+
+    <!-- JMS / Artemis (Jakarta) -> una sola lib alineada -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>artemis-jakarta-client</artifactId>
+      <version>${artemis.version}</version>
+    </dependency>
+
+    <!-- Jackson (si serializas JSON en el bridge Kafka->JMS) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.2</version>
+    </dependency>
+
+    <!-- Tests -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.kafka</groupId>
-      <artifactId>spring-kafka</artifactId>
     </dependency>
   </dependencies>
 
@@ -154,7 +166,7 @@
     </resources>
 
     <plugins>
-      <!-- Plugin de compilador Java -->
+      <!-- Java 21 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -164,7 +176,7 @@
         </configuration>
       </plugin>
 
-      <!-- Plugin Spring Boot para “repackage” -->
+      <!-- Spring Boot -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -173,16 +185,13 @@
         </configuration>
       </plugin>
 
-      <!-- Plugin para compilar / generar código desde .proto -->
+      <!-- Protobuf/gRPC -->
       <plugin>
         <groupId>io.github.ascopes</groupId>
         <artifactId>protobuf-maven-plugin</artifactId>
-        <version>3.7.0</version> <!-- cualquier 3.x reciente -->
+        <version>3.7.0</version>
         <configuration>
-          <!-- Versión de protoc -->
           <protocVersion>${protobuf.version}</protocVersion>
-
-          <!-- Registrar el plugin nativo gRPC -->
           <binaryMavenPlugins>
             <binaryMavenPlugin>
               <groupId>io.grpc</groupId>
@@ -190,23 +199,22 @@
               <version>${grpc.version}</version>
             </binaryMavenPlugin>
           </binaryMavenPlugins>
-
-          <!-- Usamos src/main/proto -->
           <sources>
             <source>${project.basedir}/src/main/proto</source>
           </sources>
-
           <outputDir>${project.build.directory}/generated-sources/protobuf/java</outputDir>
           <pluginOutputDir>${project.build.directory}/generated-sources/protobuf/grpc-java</pluginOutputDir>
         </configuration>
         <executions>
           <execution>
-            <goals><goal>generate</goal></goals>
+            <goals>
+              <goal>generate</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
 
-      <!-- (Opcional) Plugin JAXB XSD → clases, si lo usas para SOAP -->
+      <!-- JAXB -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxb2-maven-plugin</artifactId>
@@ -215,7 +223,9 @@
           <execution>
             <id>gen-jaxb</id>
             <phase>generate-sources</phase>
-            <goals><goal>xjc</goal></goals>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
             <configuration>
               <sources>
                 <source>${project.basedir}/src/main/resources/xsd</source>
@@ -234,7 +244,7 @@
         </executions>
       </plugin>
 
-      <!-- Add estructura generada por JAXB al classpath de compilación -->
+      <!-- Añadir fuentes generadas por JAXB al classpath -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -242,7 +252,9 @@
           <execution>
             <id>add-jaxb-sources</id>
             <phase>generate-sources</phase>
-            <goals><goal>add-source</goal></goals>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
             <configuration>
               <sources>
                 <source>${project.build.directory}/generated-sources/jaxb</source>
